@@ -5,8 +5,10 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 
 const LINKS = [
+  { href: "/", label: "INICIO" },
   { href: "/biblioteca", label: "BIBLIOTECA" },
   { href: "/salon", label: "SALÓN" },
+  { href: "/about", label: "ACERCA DE" },
 ]
 
 export default function Nav() {
@@ -26,7 +28,7 @@ export default function Nav() {
             <Link
               key={href}
               href={href}
-              className={pathname.startsWith(href) ? "active" : ""}
+              className={href === "/" ? pathname === "/" ? "active" : "" : pathname.startsWith(href) ? "active" : ""}
             >
               {label}
             </Link>
@@ -70,7 +72,7 @@ export default function Nav() {
           <Link
             key={href}
             href={href}
-            className={pathname.startsWith(href) ? "active" : ""}
+            className={href === "/" ? pathname === "/" ? "active" : "" : pathname.startsWith(href) ? "active" : ""}
             onClick={() => setOpen(false)}
           >
             {label}
