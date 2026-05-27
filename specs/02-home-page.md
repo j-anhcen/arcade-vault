@@ -1,6 +1,6 @@
 # SPEC 02 — Home Page
 
-> **Status:** Aprobado · **Depends on:** SPEC 01 · **Date:** 2026-05-26
+> **Status:** Implementado · **Depends on:** SPEC 01 · **Date:** 2026-05-26
 > **Objective:** Implementar la landing page (`/`) de Arcade Vault con sus siete secciones visuales y actualizar el `Nav` para incluir los links "Inicio" y "Acerca de".
 
 ---
