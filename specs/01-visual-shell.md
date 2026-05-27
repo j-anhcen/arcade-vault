@@ -1,6 +1,6 @@
 ---
 id: 01
-estado: Aprobado
+estado: Implementado
 fecha: 2026-05-26
 dependencias: ninguna
 ---
