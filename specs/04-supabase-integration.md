@@ -1,6 +1,6 @@
 # SPEC 04 — Integración de Supabase
 
-> **Status:** Aprobado · **Depends on:** SPEC 03 · **Date:** 2026-06-02
+> **Status:** Implementado · **Depends on:** SPEC 03 · **Date:** 2026-06-02
 > **Objective:** Conectar Arcade Vault a Supabase instalando los paquetes
 > necesarios y creando los clientes de browser y servidor listos para
 > usar en futuros specs de auth y base de datos.
