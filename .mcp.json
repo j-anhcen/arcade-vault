@@ -1,6 +1,8 @@
 {
-  "playwright": {
-    "command": "npx",
-    "args": ["@playwright/mcp@latest", "--screenshot-dir", ".playwright-screenshots"]
+  "mcpServers": {
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp?project_ref=kceeekqacctfclubecil"
+    }
   }
 }
