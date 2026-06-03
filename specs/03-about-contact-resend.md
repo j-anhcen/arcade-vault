@@ -1,6 +1,6 @@
 # SPEC 03 — About Page + Contacto con Resend
 
-> **Status:** Aprobado · **Depends on:** SPEC 02 · **Date:** 2026-05-27
+> **Status:** Implementado · **Depends on:** SPEC 02 · **Date:** 2026-05-27
 > **Objective:** Implementar la página `/about` de Arcade Vault con su sección
 > de presentación y formulario de contacto funcional que envía correos mediante Resend.
 
