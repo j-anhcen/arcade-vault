@@ -1,6 +1,6 @@
 # SPEC 05 — Integración del juego Asteroids
 
-> **Status:** Aprobado · **Depends on:** SPEC 01, SPEC 02 · **Date:** 2026-06-02
+> **Status:** Implementado · **Depends on:** SPEC 01, SPEC 02 · **Date:** 2026-06-02
 > **Objective:** Adaptar el clon vanilla JS de Asteroids a un componente
 > React nativo en Arcade Vault, con game loop integrado al HUD de la
 > plataforma mediante callbacks de estado.

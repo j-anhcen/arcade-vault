@@ -12,6 +12,8 @@ export default function AsteroidsPlayPage() {
   const [isGameOver, setGameOver] = useState(false)
   const [finalScore, setFinalScore] = useState(0)
   const [gameKey, setGameKey] = useState(0)
+  const [playerName, setPlayerName] = useState('')
+  const [nameConfirmed, setNameConfirmed] = useState(false)
 
   const onScoreChange = useCallback((s: number) => setScore(s), [])
   const onLivesChange = useCallback((l: number) => setLives(l), [])
@@ -28,6 +30,8 @@ export default function AsteroidsPlayPage() {
     setPaused(false)
     setGameOver(false)
     setFinalScore(0)
+    setPlayerName('')
+    setNameConfirmed(false)
     setGameKey((k) => k + 1)
   }
 
@@ -287,6 +291,153 @@ export default function AsteroidsPlayPage() {
               <span className="pixel neon-yellow" style={{ fontSize: 22 }}>
                 {finalScore.toLocaleString('es')}
               </span>
+            </div>
+
+            {/* Player name input */}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 8,
+                width: '100%',
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: 'var(--pixel)',
+                  fontSize: 9,
+                  color: 'var(--ink-faint)',
+                  letterSpacing: '0.12em',
+                }}
+              >
+                TU NOMBRE
+              </span>
+
+              {nameConfirmed ? (
+                /* Confirmed state */
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: 8,
+                    width: '100%',
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 10,
+                      border: '1px solid rgba(0,255,136,0.5)',
+                      borderRadius: 3,
+                      padding: '10px 16px',
+                      width: '100%',
+                      background: 'rgba(0,255,136,0.06)',
+                      boxShadow: '0 0 16px rgba(0,255,136,0.12)',
+                    }}
+                  >
+                    <span style={{ color: 'var(--green)', fontSize: 14 }}>✓</span>
+                    <span
+                      style={{
+                        fontFamily: 'var(--pixel)',
+                        fontSize: 13,
+                        letterSpacing: '0.18em',
+                        color: 'var(--green)',
+                      }}
+                    >
+                      {playerName}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => setNameConfirmed(false)}
+                    style={{
+                      fontFamily: 'var(--pixel)',
+                      fontSize: 8,
+                      letterSpacing: '0.1em',
+                      background: 'transparent',
+                      border: 'none',
+                      color: 'rgba(255,255,255,0.3)',
+                      cursor: 'pointer',
+                      padding: '2px 0',
+                      textDecoration: 'underline',
+                    }}
+                  >
+                    CAMBIAR
+                  </button>
+                </div>
+              ) : (
+                /* Edit state */
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: 8,
+                    width: '100%',
+                  }}
+                >
+                  <input
+                    type="text"
+                    value={playerName}
+                    onChange={(e) => setPlayerName(e.target.value.toUpperCase().slice(0, 10))}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && playerName.trim()) setNameConfirmed(true)
+                    }}
+                    placeholder="JUGADOR___"
+                    maxLength={10}
+                    autoFocus
+                    style={{
+                      fontFamily: 'var(--pixel)',
+                      fontSize: 13,
+                      letterSpacing: '0.18em',
+                      textAlign: 'center',
+                      background: 'rgba(0,0,0,0.6)',
+                      border: '1px solid rgba(0,245,255,0.4)',
+                      borderRadius: 3,
+                      color: 'var(--cyan)',
+                      padding: '10px 16px',
+                      width: '100%',
+                      outline: 'none',
+                      caretColor: 'var(--cyan)',
+                      boxShadow: '0 0 12px rgba(0,245,255,0.1)',
+                      transition: 'border-color 0.2s, box-shadow 0.2s',
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.borderColor = 'var(--cyan)'
+                      e.currentTarget.style.boxShadow = '0 0 20px rgba(0,245,255,0.25)'
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.borderColor = 'rgba(0,245,255,0.4)'
+                      e.currentTarget.style.boxShadow = '0 0 12px rgba(0,245,255,0.1)'
+                    }}
+                  />
+                  <button
+                    onClick={() => {
+                      if (playerName.trim()) setNameConfirmed(true)
+                    }}
+                    disabled={!playerName.trim()}
+                    style={{
+                      fontFamily: 'var(--pixel)',
+                      fontSize: 9,
+                      letterSpacing: '0.1em',
+                      background: playerName.trim() ? 'rgba(0,245,255,0.08)' : 'transparent',
+                      border: `1px solid ${playerName.trim() ? 'rgba(0,245,255,0.5)' : 'rgba(255,255,255,0.1)'}`,
+                      color: playerName.trim() ? 'var(--cyan)' : 'rgba(255,255,255,0.2)',
+                      padding: '8px 20px',
+                      borderRadius: 3,
+                      cursor: playerName.trim() ? 'pointer' : 'default',
+                      width: '100%',
+                      transition: 'all 0.2s',
+                      textShadow: playerName.trim() ? '0 0 8px rgba(0,245,255,0.5)' : 'none',
+                    }}
+                  >
+                    ✓ CONFIRMAR NOMBRE
+                  </button>
+                </div>
+              )}
             </div>
 
             <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>
