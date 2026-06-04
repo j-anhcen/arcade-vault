@@ -55,7 +55,7 @@ export default async function DetallePage({ params }: { params: RouteParams<{ id
             <div>
               <div className="l">PARTIDAS</div>
               <div className="v" style={{ fontSize: 20 }}>
-                {game.plays}
+                {scores.length}
               </div>
             </div>
             <div>
@@ -68,7 +68,7 @@ export default async function DetallePage({ params }: { params: RouteParams<{ id
                   fontSize: 18,
                 }}
               >
-                {game.best.toLocaleString('es')}
+                {(scores[0]?.score ?? 0).toLocaleString('es')}
               </div>
             </div>
             <div>
@@ -93,11 +93,11 @@ export default async function DetallePage({ params }: { params: RouteParams<{ id
 
           <p>{game.long}</p>
 
-          <div className="detail-actions">
+          <div className="detail-actions" style={{ justifyContent: 'flex-start' }}>
             <Link
               href={`/games/${game.slug}/play`}
               className="btn lg"
-              style={{ flex: 1, justifyContent: 'center', gap: 10 }}
+              style={{ padding: '16px 24px', gap: 10 }}
             >
               ► JUGAR AHORA
             </Link>

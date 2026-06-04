@@ -138,12 +138,13 @@ de usarse en `/games/page.tsx`.
    - El array `GAMES` y `seededScores` permanecen sin cambios (los usan
      otras partes del proyecto aún no migradas).
 
-4. **Actualizar `app/games/page.tsx` — tabla de juegos.**
-   - Cambiar de galería de tarjetas a tabla con columnas:
-     Nombre, Categoría, Dificultad, Best Score, Plays, Acción.
-   - Leer datos desde `getGames()` (Server Component, fetch en build time).
-   - Fila de Asteroids: botón "Jugar" → `/games/asteroids/play`.
-   - Resto de filas: badge "Próximamente" en lugar de botón.
+4. **Actualizar `app/games/page.tsx` — galería de cards.**
+   - Mantener el layout de galería de tarjetas (`'use client'`), alimentado
+     desde el array estático `GAMES` (todos los juegos).
+   - Cada card muestra portada, título, categoría y score récord.
+   - Al hacer click en un card navega a `/games/[id]` (detalle). No hay
+     botón "Jugar" directo en la galería.
+   - Mantener el buscador y los chips de categoría existentes.
 
 5. **Actualizar `app/games/[id]/page.tsx` — leaderboard por juego.**
    - Leer el juego con `getGame(slug)` en lugar del array `GAMES`.
@@ -176,12 +177,9 @@ de usarse en `/games/page.tsx`.
 
 - [ ] La tabla `games` existe en Supabase con el registro de Asteroids
 - [ ] La tabla `scores` existe en Supabase con la FK correcta a `games.id`
-- [ ] `GET /games` muestra una tabla (no galería) con los datos de Asteroids
-      leídos desde Supabase
-- [ ] La fila de Asteroids en `/games` tiene un botón "Jugar" que navega a
-      `/games/asteroids/play`
-- [ ] Las filas de juegos sin implementar muestran "Próximamente" en lugar
-      del botón "Jugar"
+- [ ] `GET /games` muestra la galería de cards con todos los juegos del array
+      `GAMES`; al hacer click en un card navega a `/games/[id]`
+- [ ] La galería mantiene el buscador y los chips de categoría funcionales
 - [ ] `GET /games/asteroids` incluye una sección leaderboard con top 10 scores
       de Asteroids; si no hay scores, muestra el estado vacío
 - [ ] `GET /salon` carga sin errores y muestra el leaderboard global top 10;

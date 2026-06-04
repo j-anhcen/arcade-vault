@@ -1,11 +1,13 @@
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import AsteroidsGame from '@/components/games/AsteroidsGame'
 import { getGame, saveScore } from '@/lib/data'
 
 export default function AsteroidsPlayPage() {
+  const router = useRouter()
   const [score, setScore] = useState(0)
   const [lives, setLives] = useState(3)
   const [level, setLevel] = useState(1)
@@ -53,7 +55,7 @@ export default function AsteroidsPlayPage() {
     try {
       await saveScore(gameId, playerName.trim(), finalScore)
       localStorage.setItem('arcade-vault-player-name', playerName.trim())
-      restart()
+      router.push('/games/asteroids')
     } catch {
       setSaveError('ERROR AL GUARDAR — Verifica tu conexión')
       setIsSaving(false)
