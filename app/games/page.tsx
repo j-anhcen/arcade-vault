@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { GAMES, CATS, type Game } from '@/lib/data'
+import { getGames, CATS, type Game } from '@/lib/data'
 
 function GameCard({ game }: { game: Game }) {
   const router = useRouter()
@@ -25,12 +25,12 @@ function GameCard({ game }: { game: Game }) {
     <div
       ref={ref}
       className="card"
-      onClick={() => router.push(`/games/${game.id}`)}
+      onClick={() => router.push(`/games/${game.slug}`)}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => e.key === 'Enter' && router.push(`/games/${game.id}`)}
+      onKeyDown={(e) => e.key === 'Enter' && router.push(`/games/${game.slug}`)}
     >
       <div className="cover">
         <div className={`cover-bg ${game.cover}`} />
@@ -39,26 +39,21 @@ function GameCard({ game }: { game: Game }) {
       <div className="meta">
         <div className="title">{game.title}</div>
         <div className="desc">{game.short}</div>
-        <div className="row">
-          <div className="score-badge">
-            <span>RÉCORD</span>
-            <b>{game.best.toLocaleString('es')}</b>
-          </div>
-          <div className="score-badge" style={{ textAlign: 'right' }}>
-            <span>PARTIDAS</span>
-            <b>{game.plays}</b>
-          </div>
-        </div>
       </div>
     </div>
   )
 }
 
 export default function BibliotecaPage() {
+  const [games, setGames] = useState<Game[]>([])
   const [query, setQuery] = useState('')
   const [cat, setCat] = useState('TODOS')
 
-  const filtered = GAMES.filter((g) => {
+  useEffect(() => {
+    getGames().then(setGames)
+  }, [])
+
+  const filtered = games.filter((g) => {
     const matchCat = cat === 'TODOS' || g.cat === cat
     const matchQuery =
       g.title.toLowerCase().includes(query.toLowerCase()) ||

@@ -1,5 +1,15 @@
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
+
+function db() {
+  return createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
+  )
+}
+
 export interface Game {
-  id: string
+  id: string // uuid when from Supabase; text slug in GAMES array
+  slug: string
   title: string
   short: string
   long: string
@@ -9,6 +19,15 @@ export interface Game {
   best: number
   plays: string
   difficulty: number
+}
+
+export interface Score {
+  id: string
+  game_id: string
+  player_name: string
+  score: number
+  user_id: string | null
+  created_at: string
 }
 
 export interface ScoreRow {
@@ -25,6 +44,7 @@ export const CATS: string[] = ['TODOS', 'ARCADE', 'PUZZLE', 'SHOOTER', 'VERSUS']
 export const GAMES: Game[] = [
   {
     id: 'bricks',
+    slug: 'bricks',
     title: 'BRICKS ASSAULT',
     short: 'Rompe todos los ladrillos antes de que el tiempo acabe.',
     long: 'Un clásico revitalizado: paleta, pelota y bloques de colores neon. Cada nivel añade velocidad y patrones imposibles. ¿Llegarás al nivel 99?',
@@ -37,6 +57,7 @@ export const GAMES: Game[] = [
   },
   {
     id: 'tetro',
+    slug: 'tetro',
     title: 'TETROVAULT',
     short: 'Encaja las piezas, limpia filas, sobrevive.',
     long: 'El puzzle de bloques definitivo con paleta neon y banda sonora chiptune. Las piezas caen más rápido con cada nivel. Supera tu propio récord.',
@@ -49,6 +70,7 @@ export const GAMES: Game[] = [
   },
   {
     id: 'snake',
+    slug: 'snake',
     title: 'NEON SNAKE',
     short: 'Crece, come, no te choques.',
     long: 'La serpiente de luz regresa con pistas laberínticas y power-ups que cambian las reglas a mitad de partida. Modo contra-reloj incluido.',
@@ -61,6 +83,7 @@ export const GAMES: Game[] = [
   },
   {
     id: 'glot',
+    slug: 'glot',
     title: 'GLOTÓN',
     short: 'Come puntos, evita los fantasmas.',
     long: 'Laberintos cambiantes y fantasmas con IA mejorada. Los power-ups te vuelven invencible por 8 segundos — úsalos bien.',
@@ -73,6 +96,7 @@ export const GAMES: Game[] = [
   },
   {
     id: 'invaders',
+    slug: 'invaders',
     title: 'STAR INVADERS',
     short: 'Defiende la Tierra. Dispara o muere.',
     long: 'Oleadas alienígenas con patrones de ataque únicos. Las formaciones se reorganizan en cada nivel. Tus escudos se desgastan con cada impacto.',
@@ -85,6 +109,7 @@ export const GAMES: Game[] = [
   },
   {
     id: 'asteroids',
+    slug: 'asteroids',
     title: 'ASTEROIDS',
     short: 'Destruye rocas espaciales antes de que te destruyan.',
     long: 'Nave solitaria en un campo de asteroides infinito. Sin fricción, sin piedad. Los fragmentos se parten al impactar. Esquiva, apunta y sobrevive oleada tras oleada.',
@@ -97,6 +122,7 @@ export const GAMES: Game[] = [
   },
   {
     id: 'rocas',
+    slug: 'rocas',
     title: 'ROCAS',
     short: 'Destruye asteroides antes de que te destruyan.',
     long: 'Física newtoniana en el vacío: sin fricción, sin piedad. Los asteroides se fragmentan al impactar. Esquiva, apunta y dispara con precisión.',
@@ -109,6 +135,7 @@ export const GAMES: Game[] = [
   },
   {
     id: 'rana',
+    slug: 'rana',
     title: 'CYBER FROG',
     short: 'Cruza la autopista sin acabar aplastado.',
     long: 'Tráfico a velocidades imposibles y ríos de datos binarios. Cada nivel añade carriles y reduce el tiempo de reacción disponible.',
@@ -121,6 +148,7 @@ export const GAMES: Game[] = [
   },
   {
     id: 'duelo',
+    slug: 'duelo',
     title: 'DUELO LASER',
     short: '1 vs 1. Solo uno sale vivo.',
     long: 'Arena simétrica, reflejos de laser y power-ups que cambian el juego. Juega contra la IA o desafía a un amigo en el mismo teclado.',
@@ -184,4 +212,42 @@ export function seededScores(seed: number, count = 10): ScoreRow[] {
   }
 
   return rows
+}
+
+// --- Supabase helpers ---
+
+export async function getGames(): Promise<Game[]> {
+  const { data } = await db().from('games').select('*')
+  return data ?? []
+}
+
+export async function getGame(slug: string): Promise<Game | null> {
+  const { data } = await db().from('games').select('*').eq('slug', slug).single()
+  return data ?? null
+}
+
+export async function getTopScoresByGame(gameId: string, limit = 10): Promise<Score[]> {
+  const { data } = await db()
+    .from('scores')
+    .select('*')
+    .eq('game_id', gameId)
+    .order('score', { ascending: false })
+    .limit(limit)
+  return data ?? []
+}
+
+export async function getTopScoresGlobal(limit = 10): Promise<(Score & { game_slug: string })[]> {
+  const { data } = await db()
+    .from('scores')
+    .select('*, games(slug)')
+    .order('score', { ascending: false })
+    .limit(limit)
+  return (data ?? []).map((row: Score & { games: { slug: string } }) => ({
+    ...row,
+    game_slug: row.games?.slug ?? '',
+  }))
+}
+
+export async function saveScore(gameId: string, playerName: string, score: number): Promise<void> {
+  await db().from('scores').insert({ game_id: gameId, player_name: playerName, score })
 }
