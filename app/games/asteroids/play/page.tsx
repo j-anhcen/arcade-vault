@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import Link from 'next/link'
 import AsteroidsGame from '@/components/games/AsteroidsGame'
+import { getGame, saveScore } from '@/lib/data'
 
 export default function AsteroidsPlayPage() {
   const [score, setScore] = useState(0)
@@ -13,13 +14,22 @@ export default function AsteroidsPlayPage() {
   const [finalScore, setFinalScore] = useState(0)
   const [gameKey, setGameKey] = useState(0)
   const [playerName, setPlayerName] = useState('')
-  const [nameConfirmed, setNameConfirmed] = useState(false)
+  const [gameId, setGameId] = useState<string | null>(null)
+  const [isSaving, setIsSaving] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
+
+  useEffect(() => {
+    getGame('asteroids').then((g) => g && setGameId(g.id))
+  }, [])
 
   const onScoreChange = useCallback((s: number) => setScore(s), [])
   const onLivesChange = useCallback((l: number) => setLives(l), [])
   const onLevelChange = useCallback((l: number) => setLevel(l), [])
   const onGameOver = useCallback((s: number) => {
+    const saved = localStorage.getItem('arcade-vault-player-name') ?? ''
+    setPlayerName(saved)
     setFinalScore(s)
+    setSaveError(null)
     setGameOver(true)
   }, [])
 
@@ -31,8 +41,23 @@ export default function AsteroidsPlayPage() {
     setGameOver(false)
     setFinalScore(0)
     setPlayerName('')
-    setNameConfirmed(false)
+    setSaveError(null)
+    setIsSaving(false)
     setGameKey((k) => k + 1)
+  }
+
+  async function confirmScore() {
+    if (!playerName.trim() || !gameId) return
+    setIsSaving(true)
+    setSaveError(null)
+    try {
+      await saveScore(gameId, playerName.trim(), finalScore)
+      localStorage.setItem('arcade-vault-player-name', playerName.trim())
+      restart()
+    } catch {
+      setSaveError('ERROR AL GUARDAR — Verifica tu conexión')
+      setIsSaving(false)
+    }
   }
 
   return (
@@ -238,7 +263,7 @@ export default function AsteroidsPlayPage() {
         )}
       </div>
 
-      {/* ── Game over overlay ─────────────────────────────────────────────────── */}
+      {/* ── Game over modal ───────────────────────────────────────────────────── */}
       {isGameOver && (
         <div
           style={{
@@ -251,7 +276,6 @@ export default function AsteroidsPlayPage() {
             justifyContent: 'center',
             background: 'rgba(0,0,0,0.82)',
             backdropFilter: 'blur(4px)',
-            gap: 24,
           }}
         >
           <div
@@ -313,140 +337,84 @@ export default function AsteroidsPlayPage() {
               >
                 TU NOMBRE
               </span>
+              <input
+                type="text"
+                value={playerName}
+                onChange={(e) => setPlayerName(e.target.value.toUpperCase().slice(0, 10))}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && playerName.trim() && !isSaving) confirmScore()
+                }}
+                placeholder="JUGADOR___"
+                maxLength={10}
+                autoFocus
+                disabled={isSaving}
+                style={{
+                  fontFamily: 'var(--pixel)',
+                  fontSize: 13,
+                  letterSpacing: '0.18em',
+                  textAlign: 'center',
+                  background: 'rgba(0,0,0,0.6)',
+                  border: '1px solid rgba(0,245,255,0.4)',
+                  borderRadius: 3,
+                  color: 'var(--cyan)',
+                  padding: '10px 16px',
+                  width: '100%',
+                  outline: 'none',
+                  caretColor: 'var(--cyan)',
+                  boxShadow: '0 0 12px rgba(0,245,255,0.1)',
+                  opacity: isSaving ? 0.5 : 1,
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--cyan)'
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(0,245,255,0.25)'
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(0,245,255,0.4)'
+                  e.currentTarget.style.boxShadow = '0 0 12px rgba(0,245,255,0.1)'
+                }}
+              />
+              <button
+                onClick={confirmScore}
+                disabled={!playerName.trim() || isSaving || !gameId}
+                style={{
+                  fontFamily: 'var(--pixel)',
+                  fontSize: 9,
+                  letterSpacing: '0.1em',
+                  background:
+                    playerName.trim() && !isSaving ? 'rgba(0,245,255,0.08)' : 'transparent',
+                  border: `1px solid ${playerName.trim() && !isSaving ? 'rgba(0,245,255,0.5)' : 'rgba(255,255,255,0.1)'}`,
+                  color: playerName.trim() && !isSaving ? 'var(--cyan)' : 'rgba(255,255,255,0.2)',
+                  padding: '8px 20px',
+                  borderRadius: 3,
+                  cursor: playerName.trim() && !isSaving && gameId ? 'pointer' : 'default',
+                  width: '100%',
+                  transition: 'all 0.2s',
+                  textShadow:
+                    playerName.trim() && !isSaving ? '0 0 8px rgba(0,245,255,0.5)' : 'none',
+                }}
+              >
+                {isSaving ? '...' : '✓ CONFIRMAR NOMBRE'}
+              </button>
 
-              {nameConfirmed ? (
-                /* Confirmed state */
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: 8,
-                    width: '100%',
-                  }}
+              {/* Error message */}
+              {saveError && (
+                <span
+                  className="pixel"
+                  style={{ fontSize: 8, color: 'var(--magenta)', letterSpacing: '0.08em' }}
                 >
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: 10,
-                      border: '1px solid rgba(0,255,136,0.5)',
-                      borderRadius: 3,
-                      padding: '10px 16px',
-                      width: '100%',
-                      background: 'rgba(0,255,136,0.06)',
-                      boxShadow: '0 0 16px rgba(0,255,136,0.12)',
-                    }}
-                  >
-                    <span style={{ color: 'var(--green)', fontSize: 14 }}>✓</span>
-                    <span
-                      style={{
-                        fontFamily: 'var(--pixel)',
-                        fontSize: 13,
-                        letterSpacing: '0.18em',
-                        color: 'var(--green)',
-                      }}
-                    >
-                      {playerName}
-                    </span>
-                  </div>
-                  <button
-                    onClick={() => setNameConfirmed(false)}
-                    style={{
-                      fontFamily: 'var(--pixel)',
-                      fontSize: 8,
-                      letterSpacing: '0.1em',
-                      background: 'transparent',
-                      border: 'none',
-                      color: 'rgba(255,255,255,0.3)',
-                      cursor: 'pointer',
-                      padding: '2px 0',
-                      textDecoration: 'underline',
-                    }}
-                  >
-                    CAMBIAR
-                  </button>
-                </div>
-              ) : (
-                /* Edit state */
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: 8,
-                    width: '100%',
-                  }}
-                >
-                  <input
-                    type="text"
-                    value={playerName}
-                    onChange={(e) => setPlayerName(e.target.value.toUpperCase().slice(0, 10))}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && playerName.trim()) setNameConfirmed(true)
-                    }}
-                    placeholder="JUGADOR___"
-                    maxLength={10}
-                    autoFocus
-                    style={{
-                      fontFamily: 'var(--pixel)',
-                      fontSize: 13,
-                      letterSpacing: '0.18em',
-                      textAlign: 'center',
-                      background: 'rgba(0,0,0,0.6)',
-                      border: '1px solid rgba(0,245,255,0.4)',
-                      borderRadius: 3,
-                      color: 'var(--cyan)',
-                      padding: '10px 16px',
-                      width: '100%',
-                      outline: 'none',
-                      caretColor: 'var(--cyan)',
-                      boxShadow: '0 0 12px rgba(0,245,255,0.1)',
-                      transition: 'border-color 0.2s, box-shadow 0.2s',
-                    }}
-                    onFocus={(e) => {
-                      e.currentTarget.style.borderColor = 'var(--cyan)'
-                      e.currentTarget.style.boxShadow = '0 0 20px rgba(0,245,255,0.25)'
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.borderColor = 'rgba(0,245,255,0.4)'
-                      e.currentTarget.style.boxShadow = '0 0 12px rgba(0,245,255,0.1)'
-                    }}
-                  />
-                  <button
-                    onClick={() => {
-                      if (playerName.trim()) setNameConfirmed(true)
-                    }}
-                    disabled={!playerName.trim()}
-                    style={{
-                      fontFamily: 'var(--pixel)',
-                      fontSize: 9,
-                      letterSpacing: '0.1em',
-                      background: playerName.trim() ? 'rgba(0,245,255,0.08)' : 'transparent',
-                      border: `1px solid ${playerName.trim() ? 'rgba(0,245,255,0.5)' : 'rgba(255,255,255,0.1)'}`,
-                      color: playerName.trim() ? 'var(--cyan)' : 'rgba(255,255,255,0.2)',
-                      padding: '8px 20px',
-                      borderRadius: 3,
-                      cursor: playerName.trim() ? 'pointer' : 'default',
-                      width: '100%',
-                      transition: 'all 0.2s',
-                      textShadow: playerName.trim() ? '0 0 8px rgba(0,245,255,0.5)' : 'none',
-                    }}
-                  >
-                    ✓ CONFIRMAR NOMBRE
-                  </button>
-                </div>
+                  {saveError}
+                </span>
               )}
             </div>
 
             <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>
               <button
                 onClick={restart}
+                disabled={isSaving}
                 className="btn yellow lg"
-                style={{ fontSize: 10, letterSpacing: '0.1em' }}
+                style={{ fontSize: 10, letterSpacing: '0.1em', opacity: isSaving ? 0.5 : 1 }}
               >
-                ▶ REINICIAR
+                ▶ JUGAR DE NUEVO
               </button>
               <Link
                 href="/games"
