@@ -1,8 +1,5 @@
-'use client'
-
-import { use } from 'react'
 import Link from 'next/link'
-import { GAMES, seededScores, type RouteParams } from '@/lib/data'
+import { getGame, getTopScoresByGame, type RouteParams, type Score } from '@/lib/data'
 
 function rowClass(rank: number) {
   if (rank === 1) return 'lb-row top1'
@@ -11,9 +8,17 @@ function rowClass(rank: number) {
   return 'lb-row'
 }
 
-export default function DetallePage({ params }: { params: RouteParams<{ id: string }> }) {
-  const { id } = use(params)
-  const game = GAMES.find((g) => g.id === id)
+function formatDate(iso: string): string {
+  const d = new Date(iso)
+  const dd = String(d.getDate()).padStart(2, '0')
+  const mm = String(d.getMonth() + 1).padStart(2, '0')
+  const yyyy = d.getFullYear()
+  return `${dd}/${mm}/${yyyy}`
+}
+
+export default async function DetallePage({ params }: { params: RouteParams<{ id: string }> }) {
+  const { id } = await params
+  const game = await getGame(id)
 
   if (!game) {
     return (
@@ -28,8 +33,7 @@ export default function DetallePage({ params }: { params: RouteParams<{ id: stri
     )
   }
 
-  const gameIdx = GAMES.findIndex((g) => g.id === id)
-  const scores = seededScores((gameIdx + 1) * 997)
+  const scores = await getTopScoresByGame(game.id)
 
   return (
     <div className="av-detail">
@@ -91,7 +95,7 @@ export default function DetallePage({ params }: { params: RouteParams<{ id: stri
 
           <div className="detail-actions">
             <Link
-              href={`/games/${game.id}/play`}
+              href={`/games/${game.slug}/play`}
               className="btn lg"
               style={{ flex: 1, justifyContent: 'center', gap: 10 }}
             >
@@ -107,13 +111,48 @@ export default function DetallePage({ params }: { params: RouteParams<{ id: stri
       {/* Right column: leaderboard */}
       <div className="leaderboard">
         <h3>MEJORES SCORES</h3>
-        {scores.map((row) => (
-          <div key={row.rank} className={rowClass(row.rank)}>
-            <span className="rk">#{row.rank}</span>
-            <span className="pl">{row.name}</span>
-            <span className="sc">{row.score.toLocaleString('es')}</span>
+
+        {scores.length === 0 ? (
+          <div
+            style={{
+              padding: '32px 16px',
+              textAlign: 'center',
+            }}
+          >
+            <p
+              className="pixel"
+              style={{
+                fontSize: 10,
+                color: 'var(--cyan)',
+                textShadow: '0 0 8px rgba(0,240,255,0.4)',
+                letterSpacing: '0.1em',
+                marginBottom: 6,
+              }}
+            >
+              SÉ EL PRIMERO EN ENTRAR
+            </p>
+            <p className="pixel" style={{ fontSize: 9, color: 'var(--ink-faint)' }}>
+              No hay scores aún. ¡Juega y reclama el #1!
+            </p>
           </div>
-        ))}
+        ) : (
+          scores.map((row: Score, idx: number) => {
+            const rank = idx + 1
+            return (
+              <div key={row.id} className={rowClass(rank)}>
+                <span className="rk">#{rank}</span>
+                <span className="pl">{row.player_name}</span>
+                <span className="sc">{row.score.toLocaleString('es')}</span>
+                <span
+                  className="dt"
+                  style={{ fontSize: 10, color: 'var(--ink-faint)', marginLeft: 'auto' }}
+                >
+                  {formatDate(row.created_at)}
+                </span>
+              </div>
+            )
+          })
+        )}
       </div>
     </div>
   )
