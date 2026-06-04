@@ -63,7 +63,7 @@ export default function AsteroidsPlayPage() {
       >
         {/* Left: back */}
         <Link
-          href="/biblioteca"
+          href="/games"
           style={{
             fontFamily: 'var(--pixel)',
             fontSize: 9,
@@ -449,7 +449,7 @@ export default function AsteroidsPlayPage() {
                 ▶ REINICIAR
               </button>
               <Link
-                href="/biblioteca"
+                href="/games"
                 className="btn ghost"
                 style={{ fontSize: 10, letterSpacing: '0.1em' }}
               >

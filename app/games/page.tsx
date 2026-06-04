@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useRef } from "react"
-import { useRouter } from "next/navigation"
-import { GAMES, CATS, type Game } from "@/lib/data"
+import { useState, useRef } from 'react'
+import { useRouter } from 'next/navigation'
+import { GAMES, CATS, type Game } from '@/lib/data'
 
 function GameCard({ game }: { game: Game }) {
   const router = useRouter()
@@ -18,19 +18,19 @@ function GameCard({ game }: { game: Game }) {
   }
 
   function handleMouseLeave() {
-    if (ref.current) ref.current.style.transform = ""
+    if (ref.current) ref.current.style.transform = ''
   }
 
   return (
     <div
       ref={ref}
       className="card"
-      onClick={() => router.push(`/detalle/${game.id}`)}
+      onClick={() => router.push(`/games/${game.id}`)}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => e.key === "Enter" && router.push(`/detalle/${game.id}`)}
+      onKeyDown={(e) => e.key === 'Enter' && router.push(`/games/${game.id}`)}
     >
       <div className="cover">
         <div className={`cover-bg ${game.cover}`} />
@@ -42,9 +42,9 @@ function GameCard({ game }: { game: Game }) {
         <div className="row">
           <div className="score-badge">
             <span>RÉCORD</span>
-            <b>{game.best.toLocaleString("es")}</b>
+            <b>{game.best.toLocaleString('es')}</b>
           </div>
-          <div className="score-badge" style={{ textAlign: "right" }}>
+          <div className="score-badge" style={{ textAlign: 'right' }}>
             <span>PARTIDAS</span>
             <b>{game.plays}</b>
           </div>
@@ -55,11 +55,11 @@ function GameCard({ game }: { game: Game }) {
 }
 
 export default function BibliotecaPage() {
-  const [query, setQuery] = useState("")
-  const [cat, setCat] = useState("TODOS")
+  const [query, setQuery] = useState('')
+  const [cat, setCat] = useState('TODOS')
 
   const filtered = GAMES.filter((g) => {
-    const matchCat = cat === "TODOS" || g.cat === cat
+    const matchCat = cat === 'TODOS' || g.cat === cat
     const matchQuery =
       g.title.toLowerCase().includes(query.toLowerCase()) ||
       g.short.toLowerCase().includes(query.toLowerCase())
@@ -90,7 +90,7 @@ export default function BibliotecaPage() {
           {CATS.map((c) => (
             <button
               key={c}
-              className={`chip${cat === c ? " active" : ""}`}
+              className={`chip${cat === c ? ' active' : ''}`}
               onClick={() => setCat(c)}
             >
               {c}
@@ -106,7 +106,12 @@ export default function BibliotecaPage() {
         {filtered.length === 0 && (
           <p
             className="pixel"
-            style={{ fontSize: 11, color: "var(--ink-faint)", gridColumn: "1/-1", padding: "32px 0" }}
+            style={{
+              fontSize: 11,
+              color: 'var(--ink-faint)',
+              gridColumn: '1/-1',
+              padding: '32px 0',
+            }}
           >
             SIN RESULTADOS
           </p>
