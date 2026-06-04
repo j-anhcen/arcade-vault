@@ -8,6 +8,7 @@ export interface Game {
   color: 'cyan' | 'magenta' | 'yellow' | 'green'
   best: number
   plays: string
+  difficulty: number
 }
 
 export interface ScoreRow {
@@ -32,6 +33,7 @@ export const GAMES: Game[] = [
     color: 'cyan',
     best: 148200,
     plays: '42.1K',
+    difficulty: 3,
   },
   {
     id: 'tetro',
@@ -43,6 +45,7 @@ export const GAMES: Game[] = [
     color: 'magenta',
     best: 320500,
     plays: '91.7K',
+    difficulty: 4,
   },
   {
     id: 'snake',
@@ -54,6 +57,7 @@ export const GAMES: Game[] = [
     color: 'green',
     best: 87300,
     plays: '58.4K',
+    difficulty: 2,
   },
   {
     id: 'glot',
@@ -65,6 +69,7 @@ export const GAMES: Game[] = [
     color: 'yellow',
     best: 212800,
     plays: '74.2K',
+    difficulty: 3,
   },
   {
     id: 'invaders',
@@ -76,6 +81,7 @@ export const GAMES: Game[] = [
     color: 'green',
     best: 195400,
     plays: '63.8K',
+    difficulty: 4,
   },
   {
     id: 'asteroids',
@@ -87,6 +93,7 @@ export const GAMES: Game[] = [
     color: 'cyan',
     best: 134600,
     plays: '29.5K',
+    difficulty: 4,
   },
   {
     id: 'rocas',
@@ -98,6 +105,7 @@ export const GAMES: Game[] = [
     color: 'cyan',
     best: 134600,
     plays: '29.5K',
+    difficulty: 3,
   },
   {
     id: 'rana',
@@ -109,6 +117,7 @@ export const GAMES: Game[] = [
     color: 'green',
     best: 68900,
     plays: '37.1K',
+    difficulty: 2,
   },
   {
     id: 'duelo',
@@ -120,6 +129,7 @@ export const GAMES: Game[] = [
     color: 'magenta',
     best: 500000,
     plays: '18.3K',
+    difficulty: 5,
   },
 ]
 

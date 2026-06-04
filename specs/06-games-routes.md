@@ -1,6 +1,6 @@
 # SPEC 06 — Reorganización de rutas: /games
 
-> **Status:** Aprobado · **Depends on:** SPEC 02, SPEC 05 · **Date:** 2026-06-03
+> **Status:** Implementado · **Depends on:** SPEC 02, SPEC 05 · **Date:** 2026-06-03
 > **Objective:** Unificar las rutas de biblioteca, detalle y partida bajo
 > el prefijo `/games`, eliminando `/biblioteca`, `/detalle`, `/juegos` y `/player`.
 
@@ -69,18 +69,18 @@ No aplica. Esta spec solo reorganiza rutas; no introduce estructuras de datos nu
 
 ## Acceptance criteria
 
-- [ ] `GET /games` devuelve la página de biblioteca sin errores
-- [ ] `GET /games/[id]` (cualquier juego no implementado) muestra la página de detalle
-- [ ] `GET /games/asteroids` muestra la página de detalle de Asteroids
-- [ ] `GET /games/asteroids/play` carga el juego Asteroids sin errores de consola
-- [ ] El botón "Explorar juegos" y "Ver todos los juegos" de la home navegan a `/games`
-- [ ] Las MiniCards de la home navegan a `/games/[id]`
-- [ ] Las tarjetas de `/games` navegan a `/games/[id]`
-- [ ] El botón "Volver" en `/games/[id]` navega a `/games`
-- [ ] El botón "Volver" en `/games/asteroids/play` navega a `/games`
-- [ ] `GET /biblioteca`, `GET /detalle/[id]`, `GET /juegos/asteroids/play` y
+- [X] `GET /games` devuelve la página de biblioteca sin errores
+- [X] `GET /games/[id]` (cualquier juego no implementado) muestra la página de detalle
+- [X] `GET /games/asteroids` muestra la página de detalle de Asteroids
+- [X] `GET /games/asteroids/play` carga el juego Asteroids sin errores de consola
+- [X] El botón "Explorar juegos" y "Ver todos los juegos" de la home navegan a `/games`
+- [X] Las MiniCards de la home navegan a `/games/[id]`
+- [X] Las tarjetas de `/games` navegan a `/games/[id]`
+- [X] El botón "Volver" en `/games/[id]` navega a `/games`
+- [X] El botón "Volver" en `/games/asteroids/play` navega a `/games`
+- [X] `GET /biblioteca`, `GET /detalle/[id]`, `GET /juegos/asteroids/play` y
       `GET /player/[id]` devuelven 404
-- [ ] `npm run dev` arranca sin errores de TypeScript ni de compilación
+- [X] `npm run dev` arranca sin errores de TypeScript ni de compilación
 
 ---
 

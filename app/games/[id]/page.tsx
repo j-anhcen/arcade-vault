@@ -49,19 +49,40 @@ export default function DetallePage({ params }: { params: RouteParams<{ id: stri
 
           <div className="stat-strip">
             <div>
-              <div className="l">RÉCORD</div>
-              <div className="v">{game.best.toLocaleString('es')}</div>
-            </div>
-            <div>
               <div className="l">PARTIDAS</div>
-              <div className="v" style={{ fontSize: 13 }}>
+              <div className="v" style={{ fontSize: 20 }}>
                 {game.plays}
               </div>
             </div>
             <div>
-              <div className="l">TIPO</div>
-              <div className="v" style={{ fontSize: 11 }}>
-                {game.cat}
+              <div className="l">MEJOR GLOBAL</div>
+              <div
+                className="v"
+                style={{
+                  color: 'var(--magenta)',
+                  textShadow: '0 0 6px rgba(255,0,110,0.5)',
+                  fontSize: 18,
+                }}
+              >
+                {game.best.toLocaleString('es')}
+              </div>
+            </div>
+            <div>
+              <div className="l">DIFICULTAD</div>
+              <div style={{ display: 'flex', gap: 3, marginTop: 6 }}>
+                {Array.from({ length: 5 }, (_, i) => (
+                  <span
+                    key={i}
+                    style={{
+                      color: '#F5FF00',
+                      fontSize: 16,
+                      opacity: i < game.difficulty ? 1 : 0.25,
+                      textShadow: i < game.difficulty ? '0 0 8px rgba(245,255,0,0.7)' : 'none',
+                    }}
+                  >
+                    ★
+                  </span>
+                ))}
               </div>
             </div>
           </div>
@@ -69,8 +90,15 @@ export default function DetallePage({ params }: { params: RouteParams<{ id: stri
           <p>{game.long}</p>
 
           <div className="detail-actions">
-            <Link href="/games" className="btn ghost">
-              ← VOLVER
+            <Link
+              href={`/games/${game.id}/play`}
+              className="btn lg"
+              style={{ flex: 1, justifyContent: 'center', gap: 10 }}
+            >
+              ► JUGAR AHORA
+            </Link>
+            <Link href="/games" className="btn ghost" style={{ padding: '16px 24px' }}>
+              VOLVER AL VAULT
             </Link>
           </div>
         </div>

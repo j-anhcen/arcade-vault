@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 
 const LINKS = [
   { href: "/", label: "INICIO" },
-  { href: "/biblioteca", label: "BIBLIOTECA" },
+  { href: "/games", label: "BIBLIOTECA" },
   { href: "/salon", label: "SALÓN" },
   { href: "/about", label: "ACERCA DE" },
 ]
@@ -18,7 +18,7 @@ export default function Nav() {
   return (
     <>
       <nav className="av-nav">
-        <Link href="/biblioteca" className="logo">
+        <Link href="/games" className="logo">
           <div className="logo-mark" />
           <span className="logo-text">ARCADE VAULT</span>
         </Link>
