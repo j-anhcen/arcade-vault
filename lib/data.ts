@@ -172,6 +172,19 @@ export const GAMES: Game[] = [
     plays: '18.7K',
     difficulty: 2,
   },
+  {
+    id: 'arkanoid',
+    slug: 'arkanoid',
+    title: 'ARKANOID',
+    short: 'Classic brick-breaking arcade — keep the ball in play and destroy all blocks',
+    long: 'Control your paddle to bounce the ball and smash through waves of colorful blocks across 5 levels of escalating speed. A timeless arcade classic that rewards precision and reflexes.',
+    cat: 'ARCADE',
+    cover: 'cover-arkanoid',
+    color: 'cyan',
+    best: 48250,
+    plays: '8.7K',
+    difficulty: 2,
+  },
 ]
 
 const NAMES = [
