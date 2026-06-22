@@ -1,6 +1,6 @@
 # SPEC 09 — Add ARKANOID to Arcade Vault
 
-> **Status:** Approved
+> **Status:** Implemented
 > **Depends on:** 07-leaderboard-games-table
 > **Date:** 2026-06-22
 > **Objective:** Integrar ARKANOID en Arcade Vault con canvas de juego, routing, leaderboard y modal de game over.
