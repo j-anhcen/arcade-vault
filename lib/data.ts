@@ -159,6 +159,19 @@ export const GAMES: Game[] = [
     plays: '18.3K',
     difficulty: 5,
   },
+  {
+    id: 'tetris',
+    slug: 'tetris',
+    title: 'TETRIS',
+    short: 'Stack falling tetrominoes, clear lines, and survive the ever-increasing speed.',
+    long: 'The timeless puzzle game. Rotate and drop tetrominoes to fill rows and clear them from the board. Lines cleared give points — four at once scores a Tetris. The pace quickens with every 10 lines. How long can you last?',
+    cat: 'PUZZLE',
+    cover: 'cover-tetris',
+    color: 'cyan',
+    best: 48500,
+    plays: '18.7K',
+    difficulty: 2,
+  },
 ]
 
 const NAMES = [
