@@ -540,6 +540,24 @@ a { color: inherit; text-decoration: none; }
   filter: drop-shadow(0 0 6px rgba(0,245,255,0.4));
 }
 
+.cover-tetris { background: linear-gradient(180deg, #000d1a, #020b18, #0a0a18); }
+.cover-tetris::after {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(var(--cyan),var(--cyan)) 30% 5%/9% 36% no-repeat,
+    linear-gradient(var(--magenta),var(--magenta)) 48% 30%/27% 9% no-repeat,
+    linear-gradient(var(--magenta),var(--magenta)) 57% 21%/9% 9% no-repeat,
+    linear-gradient(var(--yellow),var(--yellow)) 48% 48%/18% 9% no-repeat,
+    linear-gradient(var(--yellow),var(--yellow)) 57% 39%/18% 9% no-repeat,
+    linear-gradient(var(--green),var(--green)) 21% 48%/9% 18% no-repeat,
+    linear-gradient(var(--green),var(--green)) 21% 66%/18% 9% no-repeat,
+    linear-gradient(var(--cyan),var(--cyan)) 21% 75%/57% 9% no-repeat,
+    repeating-linear-gradient(90deg, rgba(0,245,255,0.06) 0 1px, transparent 1px 9%),
+    repeating-linear-gradient(0deg, rgba(0,245,255,0.06) 0 1px, transparent 1px 9%);
+  filter: drop-shadow(0 0 8px rgba(0,245,255,0.45));
+}
+
 /* ===== detail screen ===== */
 .av-detail {
   display: grid;
