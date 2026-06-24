@@ -1,6 +1,6 @@
 # SPEC 10 — Add NEON SNAKE to Arcade Vault
 
-> **Status:** Approved
+> **Status:** Implemented
 > **Depends on:** 07-leaderboard-games-table
 > **Date:** 2026-06-24
 > **Objective:** Integrar NEON SNAKE en Arcade Vault con canvas de juego, routing, leaderboard y modal de game over.
