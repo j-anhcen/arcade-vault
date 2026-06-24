@@ -1,7 +1,7 @@
 ---
 name: add-game
 description: Prepara el archivo de spec en specs/ para integrar un nuevo juego en Arcade Vault — listo para ejecutar con /spec-impl una vez aprobado.
-argument-hint: <game-slug>
+argument-hint: <game-slug | descripción del juego>
 ---
 
 # /add-game — Generador de spec para Arcade Vault
@@ -31,6 +31,24 @@ Follow these four phases in strict order. Do not advance to the next phase if th
 ### Phase 1 — Identify the game
 
 The received argument is: `$ARGUMENTS`
+
+**Detect argument type:**
+
+- If `$ARGUMENTS` contains one or more spaces → treat as a **game description**
+- If `$ARGUMENTS` has no spaces (letters, numbers, hyphens only) → treat as a **slug**
+
+---
+
+**If `$ARGUMENTS` is a description (contains spaces):**
+
+1. Derive a slug from the description: kebab-case, semantically meaningful, max ~15 characters. Example: "un juego de naves que disparan asteroides" → `space-shooter`.
+2. Show the suggestion to the user:
+   > `Slug sugerido: <slug>. ¿Lo usamos o prefieres otro?`
+3. Wait for confirmation or an alternative slug.
+4. Once the slug is confirmed, continue with the **"If a slug was provided"** flow below, with this difference:
+   - Pre-fill the `short` field with a polished version of the received description (≤ 80 chars) and show it to the user for confirmation alongside the other metadata.
+
+---
 
 **If `$ARGUMENTS` is empty:**
 
